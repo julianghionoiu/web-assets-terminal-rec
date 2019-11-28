@@ -2,28 +2,40 @@
 # -*- coding: utf-8 -*-
 import json
 import os
-
 from decimal import Decimal
 
 from colorama import Fore, Style
 
-metadata = {"version": 2, "width": 178, "height": 21, "timestamp": 1574614914,
-            "env": {"SHELL": "/bin/zsh", "TERM": "xterm-256color"}}
+metadata = {"version": 2, "width": 60, "height": 21}
 
-lines = [
-    {"duration_in_ticks": 10, "content": ""},
-    {"duration_in_ticks": 1, "content": Fore.CYAN + "➜ " + Style.RESET_ALL},
-    {"duration_in_ticks": 1, "content": "h"},
-    {"duration_in_ticks": 1, "content": "o"},
-    {"duration_in_ticks": 1, "content": "s"},
-    {"duration_in_ticks": 1, "content": "t"},
-    {"duration_in_ticks": 1, "content": "n"},
-    {"duration_in_ticks": 1, "content": "a"},
-    {"duration_in_ticks": 1, "content": "m"},
-    {"duration_in_ticks": 1, "content": "e"},
-    {"duration_in_ticks": 1, "content": "\r\r\n"},
-    {"duration_in_ticks": 1, "content": "candidate-laptop.local\r\n"}
-]
+
+class Text:
+    NEWLINE = "\r\n"
+    CONSOLE_ARROW = Fore.CYAN + "➜ " + Style.RESET_ALL
+
+
+def wait(ticks):
+    return [{"duration_in_ticks": ticks, "content": ""}]
+
+
+def appear(content):
+    return [{"duration_in_ticks": 1, "content": content}]
+
+
+def type(text="hostname"):
+    return [{"duration_in_ticks": 1, "content": char} for char in text]
+
+
+def press_enter():
+    return [{"duration_in_ticks": 1, "content": Text.NEWLINE}]
+
+
+asciicast_lines = []
+asciicast_lines += wait(ticks=10)
+asciicast_lines += appear(Text.CONSOLE_ARROW)
+asciicast_lines += type("hostname")
+asciicast_lines += press_enter()
+asciicast_lines += appear("candidate-laptop.local" + Text.NEWLINE)
 
 
 class DecimalEncoder(json.JSONEncoder):
@@ -37,7 +49,6 @@ class DecimalEncoder(json.JSONEncoder):
 length_of_one_tick_in_seconds = 0.10
 current_time_sec = Decimal(0.00)
 
-
 if not os.path.exists('build'):
     os.makedirs('build')
 
@@ -45,7 +56,7 @@ with open('build/data.cast', 'w') as f:
     json.dump(metadata, f)
     f.write("\n")
 
-    for line in lines:
+    for line in asciicast_lines:
         asciicast_v2_line = [current_time_sec, "o", line["content"]]
         current_time_sec += Decimal(length_of_one_tick_in_seconds * line["duration_in_ticks"])
 
