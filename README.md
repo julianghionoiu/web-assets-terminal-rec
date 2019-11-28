@@ -2,13 +2,27 @@
 
 ## Run
 
-Download statement file from HSBC
-
-Run script
+Activate
 ```
 . venv/bin/activate
+```
+
+Test
+```
+py.test ./tests
+```
+
+Test with different diff tool
+```
+py.test ./tests --approvaltests-use-reporter='PythonNative'
+```
+
+
+Run 
+```
 ./run.py
 ```
+
 
 
 ## Background
