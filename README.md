@@ -48,17 +48,19 @@ Esc[K        Erase Line - from cursor
 Esc[1;21r    Enable scrolling from row {start} to row {end}.
 Esc[2J       Erase Display
 
-Esc[H        Move cursor to the home position at the upper left of the screen
 Esc[?1h      Set cursor key to application
 Esc[?1l      Set cursor key to cursor
+Esc[?12h     ?
+Esc[?12l     ?
 Esc[?25l     Hide cursor
 Esc[?25h     Show cursor
 Esc[?2004h   Cursor after enter - could be a focus notify - release focus
+
+Esc[m        Turn off character attributes
+Esc[H        Move cursor to the home position at the upper left of the screen
 Esc[21;1H    Move cursor to the position
 Esc[6n       Query Cursor Position
 Esc[26C      Moves the cursor forward by the specified number of columns
-
-Esc[m        Turn off character attributes
 
 \b           Backspace
 \r           Return to beginning of line
