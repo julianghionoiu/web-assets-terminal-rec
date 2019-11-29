@@ -3,3 +3,4 @@ venv/
 build/
 .cache/
 __pycache__/
+*.received.txt

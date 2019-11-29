@@ -3,6 +3,7 @@ from decimal import Decimal
 
 from colorama import Fore, Style
 
+
 class Text:
     NEWLINE = "\r\n"
     CONSOLE_ARROW = Fore.CYAN + "➜ " + Style.RESET_ALL
@@ -20,8 +21,28 @@ def typing(text="hostname"):
     return [{"duration_in_ticks": 1, "content": char} for char in text]
 
 
+def delete(num_chars):
+    return [{"duration_in_ticks": 1, "content": "\b \b"} for _ in range(0, num_chars)]
+
+
 def press_enter():
     return [{"duration_in_ticks": 1, "content": Text.NEWLINE}]
+
+
+def red(text):
+    return Fore.RED + text + Style.RESET_ALL
+
+
+def green(text):
+    return Fore.GREEN + text + Style.RESET_ALL
+
+
+def dim(text):
+    return Style.DIM + text + Style.RESET_ALL
+
+
+def bright(text):
+    return Style.BRIGHT + text + Style.RESET_ALL
 
 
 class DecimalEncoder(json.JSONEncoder):
@@ -43,4 +64,3 @@ def write_asciicast_v2(stream, metadata, asciicast_lines):
 
         json.dump(asciicast_v2_line, stream, cls=DecimalEncoder)
         stream.write("\n")
-
