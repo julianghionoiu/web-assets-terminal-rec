@@ -6,43 +6,43 @@ from asciicast.text import newline
 
 
 class Wait(AsciicastAction):
-    ticks: int
+    _ticks: int
 
     def __init__(self, ticks: int) -> None:
-        self.ticks = ticks
+        self._ticks = ticks
 
     def render_frames(self, width: int, height: int) -> List[AsciicastFrame]:
-        return [AsciicastFrame(self.ticks, "")]
+        return [AsciicastFrame(self._ticks, "")]
 
 
 class Appear(AsciicastAction):
-    content: str
+    _content: str
 
     def __init__(self, content: str) -> None:
-        self.content = content
+        self._content = content
 
     def render_frames(self, width: int, height: int) -> List[AsciicastFrame]:
-        return [AsciicastFrame(1, self.content)]
+        return [AsciicastFrame(1, self._content)]
 
 
 class TypeChars(AsciicastAction):
-    text: str
+    _text: str
 
     def __init__(self, text: str) -> None:
-        self.text = text
+        self._text = text
 
     def render_frames(self, width: int, height: int) -> List[AsciicastFrame]:
-        return [AsciicastFrame(1, char) for char in self.text]
+        return [AsciicastFrame(1, char) for char in self._text]
 
 
 class Delete(AsciicastAction):
-    num_chars: int
+    _num_chars: int
 
     def __init__(self, num_chars: int) -> None:
-        self.num_chars = num_chars
+        self._num_chars = num_chars
 
     def render_frames(self, width: int, height: int) -> List[AsciicastFrame]:
-        return [AsciicastFrame(1, "\b \b") for _ in range(0, self.num_chars)]
+        return [AsciicastFrame(1, "\b \b") for _ in range(0, self._num_chars)]
 
 
 class PressEnter(AsciicastAction):
