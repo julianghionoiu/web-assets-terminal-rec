@@ -23,6 +23,10 @@ Run
 ./run.py
 ```
 
+Play recording
+```
+asciinema play build/data.cast
+```
 
 
 ## Background
