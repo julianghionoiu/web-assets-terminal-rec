@@ -3,15 +3,17 @@
 import io
 import os
 
-from asciicast import wait, appear, press_enter, type_chars, Text, AsciicastV2
+from asciicast.actions import Wait, Appear, TypeChars, PressEnter
+from asciicast.text import console_arrow, newline
+from asciicast.v2 import AsciicastV2
 
 asciicast = AsciicastV2(width=60, height=21)
-asciicast.add_all_lines([
-    wait(ticks=10),
-    appear(Text.console_arrow()),
-    type_chars("hostname"),
-    press_enter(),
-    appear("candidate-laptop.local" + Text.newline())
+asciicast.add_actions([
+    Wait(ticks=10),
+    Appear(console_arrow()),
+    TypeChars("hostname"),
+    PressEnter(),
+    Appear("candidate-laptop.local" + newline())
 ])
 
 if not os.path.exists('build'):
