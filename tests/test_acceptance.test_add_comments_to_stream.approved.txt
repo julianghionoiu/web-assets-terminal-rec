@@ -1,0 +1,4 @@
+{"version": 2, "width": 60, "height": 21}
+[0.0, "o", ""]
+[0.5, "i", "This is a comment"]
+[0.5, "o", "candidate-laptop.local\r\n"]

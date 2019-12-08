@@ -21,7 +21,7 @@ class AsciicastStream(object):
         stream.write("\n")
 
     def write_frame(self, frame: AsciicastFrame):
-        asciicast_v2_line = [self._current_time_sec, "o", frame.content]
+        asciicast_v2_line = [self._current_time_sec, frame.frame_type, frame.content]
         self._current_time_sec += Decimal(self._length_of_one_tick_in_seconds * frame.duration_in_ticks)
         json.dump(asciicast_v2_line, self._stream, cls=DecimalEncoder)
         self._stream.write("\n")

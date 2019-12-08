@@ -48,12 +48,13 @@ Esc]...Bel   Terminal specific command - ignore
 Esc=         Set alternate keypad mode
 Esc>         Set numeric keypad mode
 
-Esc[K        Erase Line - from cursor
-Esc[1;21r    Enable scrolling from row {start} to row {end}.
 Esc[2J       Erase Display
+Esc[1;21r    Enable scrolling from row {start} to row {end}.
+Esc[K        Erase Line - from cursor
 
 Esc[?1h      Set cursor key to application
 Esc[?1l      Set cursor key to cursor
+Esc[?12$p    ?
 Esc[?12h     ?
 Esc[?12l     ?
 Esc[?25l     Hide cursor
@@ -64,11 +65,14 @@ Esc[m        Turn off character attributes
 Esc[H        Move cursor to the home position at the upper left of the screen
 Esc[21;1H    Move cursor to the position
 Esc[6n       Query Cursor Position
-Esc[26C      Moves the cursor forward by the specified number of columns
+
+Esc[26A      Cursor up by the specified number of lines
+Esc[26B      Cursor down by the specified number of lines
+Esc[26C      Cursor forward by the specified number of columns
+Esc[26D      Cursor backward by the specified number of columns
+
 
 \b           Backspace
 \r           Return to beginning of line
 \n           Newline
-
-\u001b[?25l
 ```
