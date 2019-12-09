@@ -1,9 +1,6 @@
 import json
 from decimal import Decimal
 
-from asciicast.frame import AsciicastFrame
-
-
 class AsciicastStream(object):
     width: int
     height: int
@@ -20,9 +17,15 @@ class AsciicastStream(object):
         json.dump(metadata, stream)
         stream.write("\n")
 
-    def write_frame(self, frame: AsciicastFrame):
-        asciicast_v2_line = [self._current_time_sec, frame.frame_type, frame.content]
-        self._current_time_sec += Decimal(self._length_of_one_tick_in_seconds * frame.duration_in_ticks)
+    def write_comment(self, comment):
+        formatted_comment = "~~~~~~~~~~~~~  {}  ~~~~~~~~~~~~~".format(comment)
+        asciicast_v2_line = [self._current_time_sec, "i", formatted_comment]
+        json.dump(asciicast_v2_line, self._stream, cls=DecimalEncoder)
+        self._stream.write("\n")
+
+    def write_frame(self, duration_in_ticks: int, content: str):
+        asciicast_v2_line = [self._current_time_sec, "o", content]
+        self._current_time_sec += Decimal(self._length_of_one_tick_in_seconds * duration_in_ticks)
         json.dump(asciicast_v2_line, self._stream, cls=DecimalEncoder)
         self._stream.write("\n")
 

@@ -5,7 +5,6 @@ from approvaltests.approvals import verify
 from asciicast.shell import Shell
 from asciicast.stream import AsciicastStream
 from asciicast.text import newline, red, dim, bright, green
-from asciicast.comments import Comments
 
 
 def test_appear_and_type():
@@ -47,12 +46,34 @@ def test_add_comments_to_stream():
     string_stream = io.StringIO()
     aciicast_stream = AsciicastStream(width=60, height=21, stream=string_stream)
     shell = Shell(aciicast_stream)
-    comments = Comments(aciicast_stream)
 
     shell.wait(ticks=5)
-    comments.add("This is a comment")
+    aciicast_stream.write_comment("This is a comment")
     shell.appear("candidate-laptop.local" + newline())
 
     verify(string_stream.getvalue())
 
+
+# def test_vim_scroll_file_up_and_down():
+#     string_stream = io.StringIO()
+#     aciicast_stream = AsciicastStream(width=60, height=21, stream=string_stream)
+#     vim = VimEditor(aciicast_stream)
+#
+#     vim.display_content(_generate_lines(25))
+#     vim.cursor_down(lines=5)
+#     vim.cursor_down(lines=10)
+#     vim.cursor_down(lines=10)
+#     vim.cursor_up(lines=5)
+#     vim.cursor_up(lines=20)
+#
+#     verify(string_stream.getvalue())
+
+
 # ~~~~~~ Test helper
+
+def _generate_lines(num_lines):
+    block_of_text: str = ""
+    index: int
+    for index in range(0, num_lines):
+        block_of_text += "line{}\n".format(index)
+    return block_of_text
