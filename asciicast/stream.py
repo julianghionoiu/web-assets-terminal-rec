@@ -1,6 +1,7 @@
 import json
 from decimal import Decimal
 
+
 class AsciicastStream(object):
     width: int
     height: int
@@ -17,8 +18,14 @@ class AsciicastStream(object):
         json.dump(metadata, stream)
         stream.write("\n")
 
-    def write_comment(self, comment):
+    def write_section_comment(self, comment):
         formatted_comment = "~~~~~~~~~~~~~  {}  ~~~~~~~~~~~~~".format(comment)
+        asciicast_v2_line = [self._current_time_sec, "i", formatted_comment]
+        json.dump(asciicast_v2_line, self._stream, cls=DecimalEncoder)
+        self._stream.write("\n")
+
+    def write_internal_comment(self, comment):
+        formatted_comment = "## -- {}".format(comment)
         asciicast_v2_line = [self._current_time_sec, "i", formatted_comment]
         json.dump(asciicast_v2_line, self._stream, cls=DecimalEncoder)
         self._stream.write("\n")

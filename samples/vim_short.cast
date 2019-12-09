@@ -3,7 +3,6 @@
 [1.859389, "o", "\u001b[?25l"]
 [1.859389, "o", "\u001b[1;21r\u001b[H\u001b[2J"]
 [2.860777, "i", "~~~~~~~~~~~~~  Draw initial screen  ~~~~~~~~~~~~~"]
-[2.860777, "o", "\u001b[1;1H"]
 [2.860777, "o", "CHL_R1\r\n"]
 [2.860777, "o", "ROUND 1 - Our supermarket\r\n"]
 [2.860777, "o", "The purpose of this challenge is to implement a supermarket checkout that calculates the total price of a number of items.\r\n"]
