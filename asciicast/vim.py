@@ -1,88 +1,76 @@
 from asciicast.stream import AsciicastStream
-from asciicast.text import replace_escapes, trim, newline
+from asciicast.text import newline
 
 
 class VimEditor(object):
     _stream: AsciicastStream
     _data_lines: list
 
-    def __init__(self, asciicast_stream: AsciicastStream, ) -> None:
+    def __init__(self, asciicast_stream: AsciicastStream, block_of_text: str) -> None:
         self._stream = asciicast_stream
-        self._viewport_height = asciicast_stream.height - 1
-        self._viewport_cursor_row = 0
-        self._viewport_cursor_max_row = self._viewport_height - 1
-        self._data_lines = []
-        self._data_line_max_row = self._viewport_height
-
-    def display_content(self, block_of_text):
         self._data_lines = block_of_text.split()
-        short_content: str = replace_escapes(trim(block_of_text, 20))
-        self._stream.write_section_comment("display_content(block_of_text={})".format(short_content))
-        self._stream.write_internal_comment("set duration")
-        self._stream.write_frame(1, "")
+        self._viewport_height = asciicast_stream.height - 1
+        self._data_line_row = 0
+        self._cursor_row = 0
 
-        self._stream.write_internal_comment("clear screen")
-        self._stream.write_frame(0, _ansi_hide_cursor())
-        self._stream.write_frame(0, _ansi_set_window_scroll_height(self._stream.height))
-        self._stream.write_frame(0, _ansi_cursor_to_home())
-        self._stream.write_frame(0, _ansi_clear_screen())
-
-        self._stream.write_internal_comment("draw screen")
-        for index in range(0, self._data_line_max_row):
-            self._stream.write_frame(0, self._data_lines[index] + newline())
-
-        self._stream.write_internal_comment("set and show cursor")
-        self._stream.write_frame(0, _ansi_cursor_to_home())
-        self._stream.write_frame(0, _ansi_show_cursor())
+    def display_content(self):
+        self._stream.write_section_comment("display_content()")
+        self._render_data_lines(self._data_line_row, self._viewport_height, self._cursor_row)
 
     def cursor_down(self, num_lines):
         self._stream.write_section_comment("cursor_down(num_lines={})".format(num_lines))
-        max_allowed_lines = self._viewport_cursor_max_row - self._viewport_cursor_row
-        lines_with_cursor_only_move = min(max_allowed_lines, num_lines)
-        self._stream.write_internal_comment(
-            "lines_with_cursor_only_move={}".format(lines_with_cursor_only_move))
-        content_beyond_current_scroll = max(num_lines - max_allowed_lines, 0)
-        self._stream.write_internal_comment(
-            "content_beyond_current_scroll={}".format(content_beyond_current_scroll))
-        data_lines_not_yet_shown = len(self._data_lines) - self._data_line_max_row
-        self._stream.write_internal_comment(
-            "data_lines_not_yet_shown={}".format(data_lines_not_yet_shown))
-        lines_with_content_regen_scroll = min(content_beyond_current_scroll, data_lines_not_yet_shown)
-        self._stream.write_internal_comment(
-            "lines_with_content_regen_scroll={}".format(lines_with_content_regen_scroll))
-
-        self._stream.write_internal_comment("set duration")
-        self._stream.write_frame(1, "")
-
-        if lines_with_cursor_only_move:
-            self._stream.write_frame(0, _ansi_cursor_down(lines_with_cursor_only_move))
-            self._viewport_cursor_row += lines_with_cursor_only_move
-
-        if lines_with_content_regen_scroll:
-            self._stream.write_internal_comment("push content up")
-            self._stream.write_frame(0, _ansi_hide_cursor())
-            self._stream.write_frame(0, _ansi_set_window_scroll_height(self._viewport_height))
-            self._stream.write_frame(0, _ansi_cursor_to_row(self._viewport_height))
-            for _ in range(0, lines_with_content_regen_scroll):
-                self._stream.write_frame(0, newline())
-
-            self._stream.write_internal_comment("add new lines")
-            for index in range(0, lines_with_content_regen_scroll):
-                self._stream.write_frame(0, _ansi_cursor_to_row(self._viewport_height - lines_with_content_regen_scroll + 1 + index))
-                self._stream.write_frame(0, self._data_lines[self._data_line_max_row + index])
-            self._data_line_max_row += lines_with_content_regen_scroll
-
-            self._stream.write_internal_comment("reset original viewport + footer")
-            self._stream.write_frame(0, _ansi_set_window_scroll_height(self._stream.height))
-
-            self._stream.write_internal_comment("show cursor at the end")
-            self._stream.write_frame(0, _ansi_cursor_to_row(self._viewport_height))
-            self._stream.write_frame(0, _ansi_show_cursor())
-
-
+        max_cursor_down = self._viewport_height - self._cursor_row - 1
+        self._stream.write_internal_comment("max_cursor_down={}".format(max_cursor_down))
+        actual_cursor_down = min(max_cursor_down, num_lines)
+        self._stream.write_internal_comment("actual_cursor_down={}".format(actual_cursor_down))
+        self._stream.write_frame(5, "")
+        self._stream.write_frame(0, _ansi_cursor_down(actual_cursor_down))
+        self._cursor_row += actual_cursor_down
+        self._stream.write_internal_comment("self._cursor_row={}".format(self._cursor_row))
 
     def cursor_up(self, num_lines):
-        pass
+        self._stream.write_section_comment("cursor_up(num_lines={})".format(num_lines))
+        max_cursor_up = self._cursor_row
+        self._stream.write_internal_comment("max_cursor_up={}".format(max_cursor_up))
+        actual_cursor_up = min(max_cursor_up, num_lines)
+        self._stream.write_internal_comment("actual_cursor_up={}".format(actual_cursor_up))
+        self._stream.write_frame(5, "")
+        self._stream.write_frame(0, _ansi_cursor_up(actual_cursor_up))
+        self._cursor_row -= actual_cursor_up
+        self._stream.write_internal_comment("self._cursor_row={}".format(self._cursor_row))
+
+    def content_scroll_down(self, num_lines):
+        self._stream.write_section_comment("content_scroll_down(num_lines={})".format(num_lines))
+        max_scroll_down = len(self._data_lines) - self._viewport_height - self._data_line_row
+        self._stream.write_internal_comment("max_scroll_down={}".format(max_scroll_down))
+        actual_scroll_down = min(max_scroll_down, num_lines)
+        self._stream.write_internal_comment("actual_scroll_down={}".format(actual_scroll_down))
+        self._render_data_lines(self._data_line_row + actual_scroll_down, self._viewport_height, self._cursor_row)
+        self._data_line_row += actual_scroll_down
+
+    def content_scroll_up(self, num_lines):
+        self._stream.write_section_comment("content_scroll_up(num_lines={})".format(num_lines))
+        max_scroll_up = self._data_line_row
+        self._stream.write_internal_comment("max_scroll_up={}".format(max_scroll_up))
+        actual_scroll_up = min(max_scroll_up, num_lines)
+        self._stream.write_internal_comment("actual_scroll_up={}".format(actual_scroll_up))
+        self._render_data_lines(self._data_line_row - actual_scroll_up, self._viewport_height, self._cursor_row)
+        self._data_line_row -= actual_scroll_up
+
+    # ~~~~ reusable render methods ~~~~
+
+    def _render_data_lines(self, start_row: int, num_rows: int, cursor_row: int):
+        self._stream.write_frame(5, "")
+        self._stream.write_internal_comment("clear screen and hide cursor")
+        self._stream.write_frame(0, _ansi_hide_cursor())
+        self._stream.write_frame(0, _ansi_set_window_scroll_height(self._stream.height))
+        self._stream.write_frame(0, _ansi_clear_screen())
+        self._stream.write_internal_comment("draw screen")
+        for index in range(start_row, start_row + num_rows):
+            self._stream.write_frame(0, self._data_lines[index] + newline())
+        self._stream.write_internal_comment("restore and show cursor")
+        self._stream.write_frame(0, _ansi_cursor_to_row(cursor_row))
+        self._stream.write_frame(0, _ansi_show_cursor())
 
 
 # ~~~~~~~~~~~
@@ -107,9 +95,21 @@ def _ansi_cursor_to_home():
     return "\u001b[H"
 
 
+def _ansi_save_cursor_position():
+    return "\u001b[s"
+
+
+def _ansi_restore_cursor_position():
+    return "\u001b[r"
+
+
 def _ansi_cursor_to_row(num_row):
-    return "\u001b[{};1H".format(num_row)
+    return "\u001b[{};1H".format(num_row + 1)
 
 
 def _ansi_cursor_down(num_lines: int):
     return "\u001b[{}B".format(num_lines)
+
+
+def _ansi_cursor_up(num_lines: int):
+    return "\u001b[{}A".format(num_lines)

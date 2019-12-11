@@ -55,20 +55,31 @@ def test_add_comments_to_stream():
     verify(string_stream.getvalue())
 
 
-def test_vim_scroll_file_up_and_down():
+def test_vim_cursor_move_up_and_down():
     string_stream = io.StringIO()
     asciicast_stream = AsciicastStream(width=60, height=21, stream=string_stream)
-    shell = Shell(asciicast_stream)
-    vim = VimEditor(asciicast_stream)
+    vim = VimEditor(asciicast_stream, _generate_lines(25))
 
-    vim.display_content(_generate_lines(25))
+    vim.display_content()
     vim.cursor_down(num_lines=5)
-    vim.cursor_down(num_lines=14)
-    vim.cursor_down(num_lines=5)
+    vim.cursor_down(num_lines=30)
     vim.cursor_up(num_lines=5)
-    vim.cursor_up(num_lines=20)
+    vim.cursor_up(num_lines=30)
 
-    shell.wait(10)
+    verify(string_stream.getvalue())
+
+
+def test_vim_content_scroll_up_and_down():
+    string_stream = io.StringIO()
+    asciicast_stream = AsciicastStream(width=60, height=21, stream=string_stream)
+    vim = VimEditor(asciicast_stream,  _generate_lines(25))
+
+    vim.display_content()
+    vim.cursor_down(num_lines=2)
+    vim.content_scroll_down(num_lines=5)
+    vim.content_scroll_down(num_lines=30)
+    vim.content_scroll_up(num_lines=5)
+    vim.content_scroll_up(num_lines=30)
 
     verify(string_stream.getvalue())
 

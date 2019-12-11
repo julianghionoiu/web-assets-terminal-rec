@@ -19,17 +19,16 @@ with open('build/data.cast', 'w') as f:
     string_stream = io.StringIO("some initial text data")
 
     asciicast_stream = AsciicastStream(width=60, height=21, stream=string_stream,
-                                       length_of_one_tick_in_seconds=1)
+                                       length_of_one_tick_in_seconds=2)
     shell = Shell(asciicast_stream)
-    vim = VimEditor(asciicast_stream)
+    vim = VimEditor(asciicast_stream, file_contents)
 
-    vim.display_content(file_contents)
-    vim.cursor_down(num_lines=5)
-    vim.cursor_down(num_lines=14)
-    vim.cursor_down(num_lines=1)
-    vim.cursor_down(num_lines=4)
-    vim.cursor_up(num_lines=5)
-    vim.cursor_up(num_lines=20)
+    vim.display_content()
+    vim.cursor_down(num_lines=2)
+    vim.content_scroll_down(num_lines=1)
+    vim.content_scroll_down(num_lines=30)
+    vim.content_scroll_up(num_lines=1)
+    vim.content_scroll_up(num_lines=30)
 
     shell.wait(2)
 

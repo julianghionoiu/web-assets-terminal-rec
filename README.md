@@ -71,6 +71,8 @@ Esc[26B      Cursor down by the specified number of lines
 Esc[26C      Cursor forward by the specified number of columns
 Esc[26D      Cursor backward by the specified number of columns
 
+Esc[s        Save Cursor Position
+Esc[u        Restore Cursor Position
 
 \b           Backspace
 \r           Return to beginning of line
