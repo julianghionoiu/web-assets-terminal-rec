@@ -33,7 +33,7 @@
 [0.5, "i", "## -- max_cursor_down=19"]
 [0.5, "i", "## -- actual_cursor_down=2"]
 [1.0, "o", ""]
-[1.0, "o", "\u001b[2B"]
+[1.0, "o", "\u001b[3;1H"]
 [1.0, "i", "## -- cursor_position=(row:2,col:0)"]
 [1.0, "i", "~~~~~~~~~~~~~  content_scroll_down(num_lines=2)  ~~~~~~~~~~~~~"]
 [1.0, "i", "## -- max_scroll_down=6"]

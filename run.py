@@ -26,6 +26,7 @@ with open('build/data.cast', 'w') as f:
     vim.display_content()
     vim.cursor_right(num_cols=2)
     vim.cursor_right(num_cols=20)
+    vim.cursor_down(1)
     vim.cursor_left(num_cols=2)
     vim.cursor_left(num_cols=20)
 
