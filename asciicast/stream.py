@@ -27,17 +27,14 @@ class AsciicastStream(object):
         self.write_frame(frame_type="i", content=formatted_comment)
 
     def wait(self, ticks: int):
-        self.write_frame(duration_in_ticks=ticks)
+        self.write_frame(ticks_before=ticks)
 
-    def write_frame(self, content: str = "", frame_type: str = "o", duration_in_ticks: int = 0):
+    def write_frame(self, content: str = "", frame_type: str = "o", ticks_before: int = 0, ticks_after: int = 0):
+        self._current_time_sec += Decimal(self._length_of_one_tick_in_seconds * ticks_before)
         asciicast_v2_line = [self._current_time_sec, frame_type, content]
         json.dump(asciicast_v2_line, self._stream, cls=DecimalEncoder)
         self._stream.write("\n")
-        self._current_time_sec += Decimal(self._length_of_one_tick_in_seconds * duration_in_ticks)
-
-    def close(self):
-        # Write a final frame to honour the duration
-        self.write_frame()
+        self._current_time_sec += Decimal(self._length_of_one_tick_in_seconds * ticks_after)
 
 
 class DecimalEncoder(json.JSONEncoder):

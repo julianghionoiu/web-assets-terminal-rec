@@ -31,7 +31,6 @@ with open('build/data.cast', 'w') as f:
     vim.content_scroll_up(num_lines=30)
 
     asciicast_stream.wait(ticks=10)
-    asciicast_stream.close()
 
     f.write(string_stream.getvalue())
 

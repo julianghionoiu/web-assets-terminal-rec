@@ -19,7 +19,6 @@ def test_appear_and_type():
     shell.press_enter()
     shell.appear("candidate-laptop.local" + newline())
 
-    asciicast_stream.close()
     verify(string_stream.getvalue())
 
 
@@ -33,7 +32,6 @@ def test_delete():
     shell.delete(3)
     shell.appear("bar")
 
-    asciicast_stream.close()
     verify(string_stream.getvalue())
 
 
@@ -45,7 +43,6 @@ def test_colours():
     shell.appear("1. " + red("some red text") + " " + green('some green text') + newline())
     shell.appear("2. " + dim(red('x')) + " " + bright(red('x')) + newline())
 
-    asciicast_stream.close()
     verify(string_stream.getvalue())
 
 
@@ -58,7 +55,6 @@ def test_add_comments_to_stream():
     asciicast_stream.write_section_comment("This is a comment")
     shell.appear("candidate-laptop.local" + newline())
 
-    asciicast_stream.close()
     verify(string_stream.getvalue())
 
 
@@ -73,7 +69,6 @@ def test_vim_cursor_move_up_and_down():
     vim.cursor_up(num_lines=5)
     vim.cursor_up(num_lines=30)
 
-    asciicast_stream.close()
     verify(string_stream.getvalue())
 
 
@@ -89,7 +84,6 @@ def test_vim_content_scroll_up_and_down():
     vim.content_scroll_up(num_lines=5)
     vim.content_scroll_up(num_lines=30)
 
-    asciicast_stream.close()
     verify(string_stream.getvalue())
 
 
