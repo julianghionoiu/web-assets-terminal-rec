@@ -58,7 +58,7 @@ def test_add_comments_to_stream():
     verify(string_stream.getvalue())
 
 
-def test_vim_cursor_move_up_and_down():
+def test_vim_cursor_move_down_then_up():
     string_stream = io.StringIO()
     asciicast_stream = AsciicastStream(width=60, height=21, stream=string_stream)
     vim = VimEditor(asciicast_stream, _generate_lines(25))
@@ -72,17 +72,31 @@ def test_vim_cursor_move_up_and_down():
     verify(string_stream.getvalue())
 
 
-def test_vim_content_scroll_up_and_down():
+def test_vim_cursor_move_right_then_left():
     string_stream = io.StringIO()
     asciicast_stream = AsciicastStream(width=60, height=21, stream=string_stream)
-    vim = VimEditor(asciicast_stream,  _generate_lines(25))
+    vim = VimEditor(asciicast_stream, "123456789\n")
+
+    vim.display_content()
+    vim.cursor_right(num_cols=2)
+    vim.cursor_right(num_cols=10)
+    vim.cursor_left(num_cols=2)
+    vim.cursor_left(num_cols=10)
+
+    verify(string_stream.getvalue())
+
+
+def test_vim_content_scroll_down_then_up():
+    string_stream = io.StringIO()
+    asciicast_stream = AsciicastStream(width=60, height=21, stream=string_stream)
+    vim = VimEditor(asciicast_stream, _generate_lines(25))
 
     vim.display_content()
     vim.cursor_down(num_lines=2)
-    vim.content_scroll_down(num_lines=5)
-    vim.content_scroll_down(num_lines=30)
-    vim.content_scroll_up(num_lines=5)
-    vim.content_scroll_up(num_lines=30)
+    vim.content_scroll_down(num_lines=2)
+    vim.content_scroll_down(num_lines=20)
+    vim.content_scroll_up(num_lines=2)
+    vim.content_scroll_up(num_lines=20)
 
     verify(string_stream.getvalue())
 

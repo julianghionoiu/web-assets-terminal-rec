@@ -24,11 +24,10 @@ with open('build/data.cast', 'w') as f:
     vim = VimEditor(asciicast_stream, file_contents)
 
     vim.display_content()
-    vim.cursor_down(num_lines=2)
-    vim.content_scroll_down(num_lines=1)
-    vim.content_scroll_down(num_lines=30)
-    vim.content_scroll_up(num_lines=1)
-    vim.content_scroll_up(num_lines=30)
+    vim.cursor_right(num_cols=2)
+    vim.cursor_right(num_cols=20)
+    vim.cursor_left(num_cols=2)
+    vim.cursor_left(num_cols=20)
 
     asciicast_stream.wait(ticks=10)
 
