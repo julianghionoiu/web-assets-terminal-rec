@@ -1,0 +1,5 @@
+{"version": 2, "width": 60, "height": 21}
+[0.5, "o", ""]
+[0.5, "i", "~~~~~~~~~~~~~  This is a comment  ~~~~~~~~~~~~~"]
+[0.5, "i", "~~~~~~~~~~~~~  appear(content=candidate-laptop.loc..)  ~~~~~~~~~~~~~"]
+[0.5, "o", "candidate-laptop.local\r\n"]

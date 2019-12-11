@@ -1,0 +1,5 @@
+{"version": 2, "width": 60, "height": 21}
+[0.0, "i", "~~~~~~~~~~~~~  appear(content=1. Esc[31msome red tex..)  ~~~~~~~~~~~~~"]
+[0.0, "o", "1. \u001b[31msome red text\u001b[0m \u001b[32msome green text\u001b[0m\r\n"]
+[0.1, "i", "~~~~~~~~~~~~~  appear(content=2. Esc[2mEsc[31mxEsc[0mEsc[0..)  ~~~~~~~~~~~~~"]
+[0.1, "o", "2. \u001b[2m\u001b[31mx\u001b[0m\u001b[0m \u001b[1m\u001b[31mx\u001b[0m\u001b[0m\r\n"]
