@@ -2,9 +2,7 @@ import io
 
 from approvaltests.approvals import verify
 
-from asciicast.shell import Shell
 from asciicast.stream import AsciicastStream
-from asciicast.text import newline, red, dim, bright, green
 from asciicast.vim import VimEditor
 
 
@@ -36,14 +34,15 @@ def test_cursor_move_right_then_left():
     verify(string_stream.getvalue())
 
 
-def test_cursor_move_right_then_down():
+def test_cursor_adjust_location_to_content():
     string_stream = io.StringIO()
     asciicast_stream = AsciicastStream(width=60, height=21, stream=string_stream)
-    vim = VimEditor(asciicast_stream, "123456789\n123\n")
+    vim = VimEditor(asciicast_stream, "123456789\n12345\n12")
 
     vim.display_content()
     vim.cursor_right(num_cols=10)
     vim.cursor_down(num_rows=1)
+    vim.content_scroll_down(1)
 
     verify(string_stream.getvalue())
 

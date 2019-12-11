@@ -27,8 +27,9 @@ class VimEditor(object):
         self._stream.write_internal_comment("actual_cursor_down={}".format(actual_cursor_down))
 
         new_cursor_row = self._cursor_row + actual_cursor_down
-        new_cursor_col = min(self._cursor_col, self._len_of_visible_line(new_cursor_row) - 1)
-        self._render_new_cursor_location(new_cursor_col, new_cursor_row)
+        new_cursor_col = min(self._cursor_col, self._len_of_visible_line(self._cursor_row + actual_cursor_down) - 1)
+        self._stream.wait(5)
+        self._render_new_cursor_location(new_cursor_row, new_cursor_col)
 
     def cursor_up(self, num_rows):
         self._stream.write_section_comment("cursor_up(num_lines={})".format(num_rows))
@@ -39,7 +40,8 @@ class VimEditor(object):
 
         new_cursor_row = self._cursor_row - actual_cursor_up
         new_cursor_col = min(self._cursor_col, self._len_of_visible_line(new_cursor_row) - 1)
-        self._render_new_cursor_location(new_cursor_col, new_cursor_row)
+        self._stream.wait(5)
+        self._render_new_cursor_location(new_cursor_row, new_cursor_col)
 
     def cursor_right(self, num_cols):
         self._stream.write_section_comment("cursor_right(num_cols={})".format(num_cols))
@@ -50,7 +52,8 @@ class VimEditor(object):
 
         new_cursor_row = self._cursor_row
         new_cursor_col = self._cursor_col + actual_cursor_right
-        self._render_new_cursor_location(new_cursor_col, new_cursor_row)
+        self._stream.wait(5)
+        self._render_new_cursor_location(new_cursor_row, new_cursor_col)
 
     def cursor_left(self, num_cols):
         self._stream.write_section_comment("cursor_left(num_cols={})".format(num_cols))
@@ -61,7 +64,8 @@ class VimEditor(object):
 
         new_cursor_row = self._cursor_row
         new_cursor_col = self._cursor_col - actual_cursor_left
-        self._render_new_cursor_location(new_cursor_col, new_cursor_row)
+        self._stream.wait(5)
+        self._render_new_cursor_location(new_cursor_row, new_cursor_col)
 
     def content_scroll_down(self, num_rows):
         self._stream.write_section_comment("content_scroll_down(num_lines={})".format(num_rows))
@@ -73,6 +77,11 @@ class VimEditor(object):
         self._render_data_lines(self._data_line_row + actual_scroll_down)
         self._data_line_row += actual_scroll_down
 
+        # Update cursor
+        new_cursor_row = self._cursor_row
+        new_cursor_col = min(self._cursor_col, self._len_of_visible_line(self._cursor_row) - 1)
+        self._render_new_cursor_location(new_cursor_row, new_cursor_col)
+
     def content_scroll_up(self, num_rows):
         self._stream.write_section_comment("content_scroll_up(num_lines={})".format(num_rows))
         max_scroll_up = self._data_line_row
@@ -83,6 +92,11 @@ class VimEditor(object):
         self._render_data_lines(self._data_line_row - actual_scroll_up)
         self._data_line_row -= actual_scroll_up
 
+        # Update cursor
+        new_cursor_row = self._cursor_row
+        new_cursor_col = min(self._cursor_col, self._len_of_visible_line(self._cursor_row) - 1)
+        self._render_new_cursor_location(new_cursor_row, new_cursor_col)
+
     # ~~~~ reusable render methods ~~~~
 
     def _len_of_visible_line(self, new_cursor_row):
@@ -92,11 +106,10 @@ class VimEditor(object):
         self._stream.write_internal_comment("cursor_position=(row:{},col:{})".format(
             self._cursor_row, self._cursor_col))
 
-    def _render_new_cursor_location(self, new_cursor_col, new_cursor_row):
-        self._stream.wait(5)
-        self._stream.write_frame(_ansi_set_cursor_position(new_cursor_row, new_cursor_col))
-        self._cursor_row = new_cursor_row
-        self._cursor_col = new_cursor_col
+    def _render_new_cursor_location(self, cursor_row, cursor_col):
+        self._stream.write_frame(_ansi_set_cursor_position(cursor_row, cursor_col))
+        self._cursor_row = cursor_row
+        self._cursor_col = cursor_col
         self._print_cursor_position()
 
     def _render_data_lines(self, start_row: int):
