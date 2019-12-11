@@ -10,36 +10,42 @@ from asciicast.vim import VimEditor
 
 def test_appear_and_type():
     string_stream = io.StringIO()
-    shell = Shell(AsciicastStream(width=60, height=21, stream=string_stream))
+    asciicast_stream = AsciicastStream(width=60, height=21, stream=string_stream)
+    shell = Shell(asciicast_stream)
 
-    shell.wait(ticks=10)
+    asciicast_stream.wait(ticks=10)
     shell.appear("> ")
     shell.type_chars("hostname")
     shell.press_enter()
     shell.appear("candidate-laptop.local" + newline())
 
+    asciicast_stream.close()
     verify(string_stream.getvalue())
 
 
 def test_delete():
     string_stream = io.StringIO()
-    shell = Shell(AsciicastStream(width=60, height=21, stream=string_stream))
+    asciicast_stream = AsciicastStream(width=60, height=21, stream=string_stream)
+    shell = Shell(asciicast_stream)
 
     shell.appear("> ")
     shell.appear("foocar")
     shell.delete(3)
     shell.appear("bar")
 
+    asciicast_stream.close()
     verify(string_stream.getvalue())
 
 
 def test_colours():
     string_stream = io.StringIO()
-    shell = Shell(AsciicastStream(width=60, height=21, stream=string_stream))
+    asciicast_stream = AsciicastStream(width=60, height=21, stream=string_stream)
+    shell = Shell(asciicast_stream)
 
     shell.appear("1. " + red("some red text") + " " + green('some green text') + newline())
     shell.appear("2. " + dim(red('x')) + " " + bright(red('x')) + newline())
 
+    asciicast_stream.close()
     verify(string_stream.getvalue())
 
 
@@ -48,10 +54,11 @@ def test_add_comments_to_stream():
     asciicast_stream = AsciicastStream(width=60, height=21, stream=string_stream)
     shell = Shell(asciicast_stream)
 
-    shell.wait(ticks=5)
+    asciicast_stream.wait(ticks=5)
     asciicast_stream.write_section_comment("This is a comment")
     shell.appear("candidate-laptop.local" + newline())
 
+    asciicast_stream.close()
     verify(string_stream.getvalue())
 
 
@@ -66,6 +73,7 @@ def test_vim_cursor_move_up_and_down():
     vim.cursor_up(num_lines=5)
     vim.cursor_up(num_lines=30)
 
+    asciicast_stream.close()
     verify(string_stream.getvalue())
 
 
@@ -81,6 +89,7 @@ def test_vim_content_scroll_up_and_down():
     vim.content_scroll_up(num_lines=5)
     vim.content_scroll_up(num_lines=30)
 
+    asciicast_stream.close()
     verify(string_stream.getvalue())
 
 

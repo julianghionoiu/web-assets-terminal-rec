@@ -15,6 +15,7 @@ class VimEditor(object):
 
     def display_content(self):
         self._stream.write_section_comment("display_content()")
+        self._stream.wait(5)
         self._render_data_lines(self._data_line_row, self._viewport_height, self._cursor_row)
 
     def cursor_down(self, num_lines):
@@ -23,8 +24,8 @@ class VimEditor(object):
         self._stream.write_internal_comment("max_cursor_down={}".format(max_cursor_down))
         actual_cursor_down = min(max_cursor_down, num_lines)
         self._stream.write_internal_comment("actual_cursor_down={}".format(actual_cursor_down))
-        self._stream.write_frame(5, "")
-        self._stream.write_frame(0, _ansi_cursor_down(actual_cursor_down))
+        self._stream.wait(5)
+        self._stream.write_frame(_ansi_cursor_down(actual_cursor_down))
         self._cursor_row += actual_cursor_down
         self._stream.write_internal_comment("self._cursor_row={}".format(self._cursor_row))
 
@@ -34,8 +35,8 @@ class VimEditor(object):
         self._stream.write_internal_comment("max_cursor_up={}".format(max_cursor_up))
         actual_cursor_up = min(max_cursor_up, num_lines)
         self._stream.write_internal_comment("actual_cursor_up={}".format(actual_cursor_up))
-        self._stream.write_frame(5, "")
-        self._stream.write_frame(0, _ansi_cursor_up(actual_cursor_up))
+        self._stream.wait(5)
+        self._stream.write_frame(_ansi_cursor_up(actual_cursor_up))
         self._cursor_row -= actual_cursor_up
         self._stream.write_internal_comment("self._cursor_row={}".format(self._cursor_row))
 
@@ -45,6 +46,7 @@ class VimEditor(object):
         self._stream.write_internal_comment("max_scroll_down={}".format(max_scroll_down))
         actual_scroll_down = min(max_scroll_down, num_lines)
         self._stream.write_internal_comment("actual_scroll_down={}".format(actual_scroll_down))
+        self._stream.wait(5)
         self._render_data_lines(self._data_line_row + actual_scroll_down, self._viewport_height, self._cursor_row)
         self._data_line_row += actual_scroll_down
 
@@ -54,23 +56,23 @@ class VimEditor(object):
         self._stream.write_internal_comment("max_scroll_up={}".format(max_scroll_up))
         actual_scroll_up = min(max_scroll_up, num_lines)
         self._stream.write_internal_comment("actual_scroll_up={}".format(actual_scroll_up))
+        self._stream.wait(5)
         self._render_data_lines(self._data_line_row - actual_scroll_up, self._viewport_height, self._cursor_row)
         self._data_line_row -= actual_scroll_up
 
     # ~~~~ reusable render methods ~~~~
 
     def _render_data_lines(self, start_row: int, num_rows: int, cursor_row: int):
-        self._stream.write_frame(5, "")
         self._stream.write_internal_comment("clear screen and hide cursor")
-        self._stream.write_frame(0, _ansi_hide_cursor())
-        self._stream.write_frame(0, _ansi_set_window_scroll_height(self._stream.height))
-        self._stream.write_frame(0, _ansi_clear_screen())
+        self._stream.write_frame(_ansi_hide_cursor())
+        self._stream.write_frame(_ansi_set_window_scroll_height(self._stream.height))
+        self._stream.write_frame(_ansi_clear_screen())
         self._stream.write_internal_comment("draw screen")
         for index in range(start_row, start_row + num_rows):
-            self._stream.write_frame(0, self._data_lines[index] + newline())
+            self._stream.write_frame(self._data_lines[index] + newline())
         self._stream.write_internal_comment("restore and show cursor")
-        self._stream.write_frame(0, _ansi_cursor_to_row(cursor_row))
-        self._stream.write_frame(0, _ansi_show_cursor())
+        self._stream.write_frame(_ansi_cursor_to_row(cursor_row))
+        self._stream.write_frame(_ansi_show_cursor())
 
 
 # ~~~~~~~~~~~

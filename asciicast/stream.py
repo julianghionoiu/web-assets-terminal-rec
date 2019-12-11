@@ -20,21 +20,24 @@ class AsciicastStream(object):
 
     def write_section_comment(self, comment):
         formatted_comment = "~~~~~~~~~~~~~  {}  ~~~~~~~~~~~~~".format(comment)
-        asciicast_v2_line = [self._current_time_sec, "i", formatted_comment]
-        json.dump(asciicast_v2_line, self._stream, cls=DecimalEncoder)
-        self._stream.write("\n")
+        self.write_frame(frame_type="i", content=formatted_comment)
 
     def write_internal_comment(self, comment):
         formatted_comment = "## -- {}".format(comment)
-        asciicast_v2_line = [self._current_time_sec, "i", formatted_comment]
-        json.dump(asciicast_v2_line, self._stream, cls=DecimalEncoder)
-        self._stream.write("\n")
+        self.write_frame(frame_type="i", content=formatted_comment)
 
-    def write_frame(self, duration_in_ticks: int, content: str):
-        asciicast_v2_line = [self._current_time_sec, "o", content]
-        self._current_time_sec += Decimal(self._length_of_one_tick_in_seconds * duration_in_ticks)
+    def wait(self, ticks: int):
+        self.write_frame(duration_in_ticks=ticks)
+
+    def write_frame(self, content: str = "", frame_type: str = "o", duration_in_ticks: int = 0):
+        asciicast_v2_line = [self._current_time_sec, frame_type, content]
         json.dump(asciicast_v2_line, self._stream, cls=DecimalEncoder)
         self._stream.write("\n")
+        self._current_time_sec += Decimal(self._length_of_one_tick_in_seconds * duration_in_ticks)
+
+    def close(self):
+        # Write a final frame to honour the duration
+        self.write_frame()
 
 
 class DecimalEncoder(json.JSONEncoder):
