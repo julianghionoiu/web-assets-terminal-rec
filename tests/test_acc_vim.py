@@ -34,6 +34,18 @@ def test_cursor_move_right_then_left():
     verify(string_stream.getvalue())
 
 
+def test_cursor_move_right_with_colours():
+    string_stream = io.StringIO()
+    asciicast_stream = AsciicastStream(width=60, height=21, stream=string_stream)
+    vim = VimEditor(asciicast_stream, "\u001b[31mredtext\u001b[0m\n")
+
+    vim.display_content()
+    vim.cursor_right(num_cols=2)
+    vim.cursor_right(num_cols=10)
+
+    verify(string_stream.getvalue())
+
+
 def test_cursor_adjust_location_to_content():
     string_stream = io.StringIO()
     asciicast_stream = AsciicastStream(width=60, height=21, stream=string_stream)

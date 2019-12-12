@@ -1,3 +1,5 @@
+import re
+
 from asciicast.stream import AsciicastStream
 from asciicast.text import newline
 
@@ -99,8 +101,12 @@ class VimEditor(object):
 
     # ~~~~ reusable render methods ~~~~
 
+    ANSI_ESCAPE_PATTERN = re.compile(r'(?:\x1B[@-_]|[\x80-\x9F])[0-?]*[ -/]*[@-~]')
+
     def _len_of_visible_line(self, new_cursor_row):
-        return len(self._data_lines[self._data_line_row + new_cursor_row])
+        data_line = self._data_lines[self._data_line_row + new_cursor_row]
+        visible_chars = self.ANSI_ESCAPE_PATTERN.sub("", data_line)
+        return len(visible_chars)
 
     def _print_cursor_position(self):
         self._stream.write_internal_comment("cursor_position=(row:{},col:{})".format(
