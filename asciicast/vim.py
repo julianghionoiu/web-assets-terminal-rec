@@ -100,6 +100,7 @@ class VimEditor(object):
         self._render_new_cursor_location(new_cursor_row, new_cursor_col)
 
     def appear_in_footer(self, text):
+        self._stream.write_section_comment("appear_in_footer(text={})".format(text))
         self._stream.wait(5)
         self._stream.write_frame(_ansi_hide_cursor())
         self._stream.write_frame(_ansi_set_cursor_position(self._viewport_height, 0))
@@ -109,6 +110,7 @@ class VimEditor(object):
         self._stream.write_frame(_ansi_show_cursor())
 
     def type_in_footer(self, text):
+        self._stream.write_section_comment("type_in_footer(text={})".format(text))
         self._stream.wait(5)
         self._stream.write_frame(_ansi_hide_cursor())
         self._stream.write_frame(_ansi_set_cursor_position(self._viewport_height, 0))
@@ -118,13 +120,55 @@ class VimEditor(object):
         for _char in text:
             self._stream.write_frame(content=_char, ticks_after=1)
 
+    def delete_at_cursor(self, num_chars):
+        self._stream.write_section_comment("delete_at_cursor(num_chars={})".format(num_chars))
+        self._stream.wait(5)
+        chars_in_row = self._len_of_visible_line(self._cursor_row)
+        max_chars_to_delete = min(chars_in_row - self._cursor_col, num_chars)
+        for _ in range(0, max_chars_to_delete):
+            self._delete_char_at_cursor(self._cursor_row, self._cursor_col)
+        self._render_individual_data_line(self._cursor_row)
+
+    def type_at_cursor(self, text):
+        self._stream.write_section_comment("type_at_cursor(text={})".format(text))
+        self._stream.wait(5)
+        for _char in text:
+            self._insert_char_at_cursor(self._cursor_row, self._cursor_col, _char)
+            self._render_individual_data_line(self._cursor_row)
+            self._cursor_col += 1
+            self._stream.wait(1)
+
     # ~~~~ reusable render methods ~~~~
 
-    ANSI_ESCAPE_PATTERN = re.compile(r'(?:\x1B[@-_]|[\x80-\x9F])[0-?]*[ -/]*[@-~]')
+    ANSI_ESCAPE_PATTERN_ALL = re.compile(r'(?:\x1B[@-_]|[\x80-\x9F])[0-?]*[ -/]*[@-~]')
 
-    def _len_of_visible_line(self, new_cursor_row):
-        data_line = self._data_lines[self._data_line_row + new_cursor_row]
-        visible_chars = self.ANSI_ESCAPE_PATTERN.sub("", data_line)
+    def _delete_char_at_cursor(self, cursor_row, cursor_col):
+        data_line = self._data_lines[self._data_line_row + cursor_row]
+        data_index = self._translate_cursor_col_to_data_index(data_line, cursor_col)
+        new_data_line = data_line[:data_index] + data_line[data_index + 1:]
+        self._data_lines[self._data_line_row + cursor_row] = new_data_line
+
+    def _insert_char_at_cursor(self, cursor_row, cursor_col, the_char):
+        data_line = self._data_lines[self._data_line_row + cursor_row]
+        data_index = self._translate_cursor_col_to_data_index(data_line, cursor_col)
+        new_data_line = data_line[:data_index] + the_char + data_line[data_index:]
+        self._data_lines[self._data_line_row + cursor_row] = new_data_line
+
+    def _translate_cursor_col_to_data_index(self, data_line, cursor_col):
+        sanitised_line = self.ANSI_ESCAPE_PATTERN_ALL.sub(lambda match: "_" * len(match.group()), data_line)
+        alpha_chars = 0
+        corresponding_index = len(data_line)
+        for i in range(0, len(sanitised_line)):
+            if sanitised_line[i] != "_":
+                alpha_chars += 1
+            if alpha_chars == cursor_col + 1:
+                corresponding_index = i
+                break
+        return corresponding_index
+
+    def _len_of_visible_line(self, cursor_row):
+        data_line = self._data_lines[self._data_line_row + cursor_row]
+        visible_chars = self.ANSI_ESCAPE_PATTERN_ALL.sub("", data_line)
         return len(visible_chars)
 
     def _print_cursor_position(self):
@@ -145,6 +189,17 @@ class VimEditor(object):
         self._stream.write_internal_comment("draw screen")
         for index in range(start_row, start_row + self._viewport_height):
             self._stream.write_frame(self._data_lines[index] + newline())
+        self._stream.write_internal_comment("restore and show cursor")
+        self._stream.write_frame(_ansi_set_cursor_position(self._cursor_row, self._cursor_col))
+        self._stream.write_frame(_ansi_show_cursor())
+
+    def _render_individual_data_line(self, data_row: int):
+        self._stream.write_internal_comment("clear line and hide cursor")
+        self._stream.write_frame(_ansi_hide_cursor())
+        self._stream.write_frame(_ansi_set_cursor_position(self._cursor_row, 0))
+        self._stream.write_frame(_ansi_clear_line())
+        self._stream.write_internal_comment("draw line")
+        self._stream.write_frame(self._data_lines[data_row])
         self._stream.write_internal_comment("restore and show cursor")
         self._stream.write_frame(_ansi_set_cursor_position(self._cursor_row, self._cursor_col))
         self._stream.write_frame(_ansi_show_cursor())

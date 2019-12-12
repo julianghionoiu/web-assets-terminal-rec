@@ -21,13 +21,13 @@ with open('build/data.cast', 'w') as f:
     asciicast_stream = AsciicastStream(width=60, height=21, stream=string_stream,
                                        length_of_one_tick_in_seconds=0.1)
     shell = Shell(asciicast_stream)
-    vim = VimEditor(asciicast_stream, file_contents)
+    # vim = VimEditor(asciicast_stream, file_contents)
+    vim = VimEditor(asciicast_stream, "\u001b[31mred????\u001b[0m word2\n")
 
     vim.display_content()
-    vim.cursor_right(num_cols=2)
-    vim.cursor_right(num_cols=20)
-    vim.appear_in_footer("-- INSERT --")
-    vim.type_in_footer(":wq")
+    vim.cursor_right(num_cols=3)
+    vim.delete_at_cursor(num_chars=20)
+    vim.type_at_cursor("word\n")
 
     asciicast_stream.wait(ticks=10)
 
