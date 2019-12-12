@@ -99,6 +99,25 @@ class VimEditor(object):
         new_cursor_col = min(self._cursor_col, self._len_of_visible_line(self._cursor_row) - 1)
         self._render_new_cursor_location(new_cursor_row, new_cursor_col)
 
+    def appear_in_footer(self, text):
+        self._stream.wait(5)
+        self._stream.write_frame(_ansi_hide_cursor())
+        self._stream.write_frame(_ansi_set_cursor_position(self._viewport_height, 0))
+        self._stream.write_frame(_ansi_clear_line())
+        self._stream.write_frame(text)
+        self._stream.write_frame(_ansi_set_cursor_position(self._cursor_row, self._cursor_col))
+        self._stream.write_frame(_ansi_show_cursor())
+
+    def type_in_footer(self, text):
+        self._stream.wait(5)
+        self._stream.write_frame(_ansi_hide_cursor())
+        self._stream.write_frame(_ansi_set_cursor_position(self._viewport_height, 0))
+        self._stream.write_frame(_ansi_clear_line())
+        self._stream.write_frame(_ansi_show_cursor())
+        self._stream.write_section_comment("type_chars(text={})".format(text))
+        for _char in text:
+            self._stream.write_frame(content=_char, ticks_after=1)
+
     # ~~~~ reusable render methods ~~~~
 
     ANSI_ESCAPE_PATTERN = re.compile(r'(?:\x1B[@-_]|[\x80-\x9F])[0-?]*[ -/]*[@-~]')
@@ -139,6 +158,10 @@ def _ansi_set_window_scroll_height(num_lines: int):
 
 def _ansi_clear_screen():
     return "\u001b[2J"
+
+
+def _ansi_clear_line():
+    return "\u001b[2K"
 
 
 def _ansi_hide_cursor():

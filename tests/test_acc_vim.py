@@ -74,6 +74,18 @@ def test_content_scroll_down_then_up():
     verify(string_stream.getvalue())
 
 
+def test_footer_appear_and_type():
+    string_stream = io.StringIO()
+    asciicast_stream = AsciicastStream(width=60, height=21, stream=string_stream)
+    vim = VimEditor(asciicast_stream, "some_text\n")
+
+    vim.display_content()
+    vim.appear_in_footer("-- INSERT --")
+    vim.type_in_footer(":wq")
+
+    verify(string_stream.getvalue())
+
+
 # ~~~~~~ Test helper
 
 def _generate_lines(num_lines):

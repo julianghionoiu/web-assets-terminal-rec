@@ -26,9 +26,8 @@ with open('build/data.cast', 'w') as f:
     vim.display_content()
     vim.cursor_right(num_cols=2)
     vim.cursor_right(num_cols=20)
-    vim.content_scroll_down(1)
-    vim.cursor_left(num_cols=2)
-    vim.cursor_left(num_cols=20)
+    vim.appear_in_footer("-- INSERT --")
+    vim.type_in_footer(":wq")
 
     asciicast_stream.wait(ticks=10)
 
