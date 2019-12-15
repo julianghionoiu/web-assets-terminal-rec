@@ -59,7 +59,12 @@ Esc[?12h     ?
 Esc[?12l     ?
 Esc[?25l     Hide cursor
 Esc[?25h     Show cursor
-Esc[?2004h   Cursor after enter - could be a focus notify - release focus
+
+Esc[?2004h   ?
+Esc[?2004l   ?
+
+Esc[?1049h   Screen save
+Esc[?1049l   Screen restore
 
 Esc[m        Turn off character attributes
 Esc[H        Move cursor to the home position at the upper left of the screen
@@ -78,3 +83,4 @@ Esc[u        Restore Cursor Position
 \r           Return to beginning of line
 \n           Newline
 ```
+

@@ -99,6 +99,17 @@ def test_content_delete_and_insert():
     verify(string_stream.getvalue())
 
 
+def test_quitting():
+    string_stream = io.StringIO()
+    asciicast_stream = AsciicastStream(width=60, height=21, stream=string_stream)
+    vim = VimEditor(asciicast_stream, "some content\n")
+
+    vim.display_content()
+    vim.close()
+
+    verify(string_stream.getvalue())
+
+
 # ~~~~~~ Test helper
 
 def _generate_lines(num_lines):

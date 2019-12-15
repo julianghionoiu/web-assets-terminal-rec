@@ -6,6 +6,7 @@ import os
 from asciicast.shell import Shell
 from asciicast.vim import VimEditor
 from asciicast.stream import AsciicastStream
+from asciicast.text import newline
 
 if not os.path.exists('build'):
     os.makedirs('build')
@@ -28,8 +29,14 @@ with open('build/data.cast', 'w') as f:
     vim.cursor_right(num_cols=3)
     vim.delete_at_cursor(num_chars=20)
     vim.type_at_cursor("word\n")
+    vim.close()
 
-    asciicast_stream.wait(ticks=10)
+    shell.appear("> ")
+    shell.type_chars("hostname")
+    shell.press_enter()
+    shell.appear("candidate-laptop.local" + newline())
+
+    asciicast_stream.wait(ticks=50)
 
     f.write(string_stream.getvalue())
 

@@ -1,6 +1,8 @@
 {"version": 2, "width": 60, "height": 21}
 [0.0, "i", "~~~~~~~~~~~~~  display_content()  ~~~~~~~~~~~~~"]
 [0.5, "o", ""]
+[0.5, "i", "## -- save screen status - will be used on exit"]
+[0.5, "o", "\u001b[?1049h"]
 [0.5, "i", "## -- clear screen and hide cursor"]
 [0.5, "o", "\u001b[?25l"]
 [0.5, "o", "\u001b[1;21r"]

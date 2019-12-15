@@ -19,6 +19,8 @@ class VimEditor(object):
     def display_content(self):
         self._stream.write_section_comment("display_content()")
         self._stream.wait(5)
+        self._stream.write_internal_comment("save screen status - will be used on exit")
+        self._stream.write_frame(_ansi_save_screen())
         self._render_data_lines(self._data_line_row)
 
     def cursor_down(self, num_rows):
@@ -138,6 +140,12 @@ class VimEditor(object):
             self._cursor_col += 1
             self._stream.wait(1)
 
+    def close(self):
+        self._stream.write_section_comment("close()")
+        self._stream.wait(5)
+        self._stream.write_internal_comment("restore screen status")
+        self._stream.write_frame(_ansi_restore_screen())
+
     # ~~~~ reusable render methods ~~~~
 
     ANSI_ESCAPE_PATTERN_ALL = re.compile(r'(?:\x1B[@-_]|[\x80-\x9F])[0-?]*[ -/]*[@-~]')
@@ -209,6 +217,14 @@ class VimEditor(object):
 
 def _ansi_set_window_scroll_height(num_lines: int):
     return "\u001b[1;{}r".format(num_lines)
+
+
+def _ansi_save_screen():
+    return "\u001b[?1049h"
+
+
+def _ansi_restore_screen():
+    return "\u001b[?1049l"
 
 
 def _ansi_clear_screen():
