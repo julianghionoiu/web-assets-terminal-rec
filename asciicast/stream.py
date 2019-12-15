@@ -1,12 +1,14 @@
 import json
 from decimal import Decimal
+from typing import List
 
 
 class AsciicastStream(object):
     width: int
     height: int
 
-    def __init__(self, width: int, height: int, stream, length_of_one_tick_in_seconds=0.10) -> None:
+    def __init__(self, width: int, height: int, stream,
+                 length_of_one_tick_in_seconds=0.10) -> None:
         self.width = width
         self.height = height
         self._length_of_one_tick_in_seconds = length_of_one_tick_in_seconds
@@ -35,6 +37,19 @@ class AsciicastStream(object):
         json.dump(asciicast_v2_line, self._stream, cls=DecimalEncoder)
         self._stream.write("\n")
         self._current_time_sec += Decimal(self._length_of_one_tick_in_seconds * ticks_after)
+
+    def write_from_input_stream(self, input_stream):
+        time_offset=self._current_time_sec
+        for line in input_stream:
+            input_list = json.loads(line)
+            if isinstance(input_list, List):
+                time = input_list[0]
+                frame_type = input_list[1]
+                content = input_list[2]
+                self._current_time_sec = time_offset + Decimal(time)
+                asciicast_v2_line = [self._current_time_sec, frame_type, content]
+                json.dump(asciicast_v2_line, self._stream, cls=DecimalEncoder)
+                self._stream.write("\n")
 
 
 class DecimalEncoder(json.JSONEncoder):
