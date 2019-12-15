@@ -22,4 +22,4 @@ class Shell(object):
             self._stream.write_frame(content="\b \b", ticks_after=1)
 
     def press_enter(self):
-        self._stream.write_frame(content=newline(), ticks_after=1)
+        self._stream.write_frame(content=newline(), ticks_before=4, ticks_after=1)

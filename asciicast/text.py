@@ -8,12 +8,21 @@ def newline() -> str:
 
 # ~~~~~~~~~~ Colours
 
+
 def red(text: str) -> str:
     return "\u001b[31m{}\u001b[0m".format(text)
 
 
 def green(text: str) -> str:
     return "\u001b[32m{}\u001b[0m".format(text)
+
+
+def cyan(text: str) -> str:
+    return "\u001b[36m{}\u001b[0m".format(text)
+
+
+def white(text: str) -> str:
+    return "\u001b[37m{}\u001b[0m".format(text)
 
 
 def dim(text: str) -> str:
