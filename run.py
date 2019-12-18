@@ -4,45 +4,40 @@ import os
 
 from asciicast.shell import Shell
 from asciicast.stream import AsciicastStream
-from asciicast.text import newline, bright, cyan, console_arrow
+from asciicast.text import newline, bright, cyan, green, blue, console_arrow, yellow, white, dim
 
 if not os.path.exists('build'):
     os.makedirs('build')
 
 
-def with_cast(f):
-    return AsciicastStream(width=60, height=21, stream=f,
-                           length_of_one_tick_in_seconds=0.1)
-
-
-def section_01_hostname(input_stream):
-    asciicast_stream = with_cast(input_stream)
+def section_01_hostname(asciicast_stream):
     shell = Shell(asciicast_stream)
 
     shell.appear(bright(cyan("# Use own laptop and tools")) + newline())
-    asciicast_stream.wait(4)
     shell.appear(console_arrow())
+    asciicast_stream.wait(5)
+
     shell.type_chars("hostname")
     shell.press_enter()
     shell.appear("candidate-laptop.local" + newline())
     shell.appear(newline())
 
 
-def section_02_clone_project(input_stream):
-    asciicast_stream = with_cast(input_stream)
+def section_02_clone_project(asciicast_stream):
     shell = Shell(asciicast_stream)
 
     shell.appear(bright(cyan("# Clone a starting project - pick language")) + newline())
-    asciicast_stream.wait(4)
     shell.appear(console_arrow())
+    asciicast_stream.wait(5)
+
     shell.type_chars("wget https://get")
     shell.appear(".accelerate.io/")
     asciicast_stream.wait(10)
     shell.type_chars("java")
-    asciicast_stream.wait(10)
+    asciicast_stream.wait(5)
     shell.delete(4)
     shell.type_chars("python")
-    asciicast_stream.wait(10)
+    asciicast_stream.wait(5)
     shell.type_chars(" | unzip")
     shell.press_enter()
     shell.appear("Resolving get.accelerate.io (get.accelerate.io)...")
@@ -56,21 +51,170 @@ def section_02_clone_project(input_stream):
     shell.appear("Done" + newline())
     shell.appear(console_arrow())
     shell.press_enter()
+    shell.appear(newline())
+    asciicast_stream.wait(10)
+
+
+def section_03_standard_project_setup(asciicast_stream):
+    shell = Shell(asciicast_stream)
+
+    shell.appear(bright(cyan("# Standard project for the language of choice")) + newline())
     shell.appear(console_arrow())
+    asciicast_stream.wait(5)
+
+    shell.type_chars("ls -1")
+    asciicast_stream.wait(4)
+    shell.press_enter()
+    shell.appear(
+        "README.md" + newline() +
+        bright(cyan("config")) + newline() +
+        bright(cyan("lib")) + newline() +
+        "requirements.txt" + newline() +
+        bright(cyan("test")) + newline() +
+        bright(cyan("venv")) + newline()
+    )
+    shell.appear(newline())
+    asciicast_stream.wait(10)
+
+
+def section_04_start_challenge(asciicast_stream):
+    shell = Shell(asciicast_stream)
+
+    shell.appear(bright(cyan("# Start challenge from CLI or IDE")) + newline())
+    shell.appear(console_arrow())
+    asciicast_stream.wait(5)
+
+    shell.type_chars("py")
+    shell.appear("thon")
+    shell.type_chars(" lib/se")
+    shell.appear("nd_command_to_server.py")
+    shell.press_enter()
+
+    shell.appear("Connecting to accelerate.io" + newline())
+    shell.appear(newline())
+    shell.appear("Your progress (1/2):" + newline())
+    shell.appear(
+        " " + green("✓") + " WARMUP (3 rounds) - " + green("completed in 5 min") + newline() +
+        " " + bright(blue(">")) + " REALM  (5 rounds) - official" + newline() +
+        "             ROUND 1 - not started" + newline() +
+        "             ROUND 2 - not started" + newline() +
+        "             ROUND 3 - not started" + newline() +
+        "             ROUND 4 - not started" + newline() +
+        "             ROUND 5 - not started" + newline()
+    )
+    shell.appear("-------------------" + newline())
+    shell.appear(yellow("Type \"start\" to start challenge") + newline())
+    shell.appear(">>> ")
+    asciicast_stream.wait(10)
+    shell.type_chars("start")
+    shell.press_enter()
+
+    shell.appear(newline())
+    shell.appear(green("CHALLENGE STARTED") + newline())
+    shell.appear("Round 1 description saved to: challenge/round1.txt")
+    shell.appear(newline())
+    shell.appear(newline())
+    shell.appear(console_arrow())
+    asciicast_stream.wait(7)
+
+
+def section_05_real_world_challenge(asciicast_stream):
+    shell = Shell(asciicast_stream)
+
+    shell.appear(bright(cyan("# Solve a real-world, scenario based challenge")) + newline())
+    shell.appear(console_arrow())
+    asciicast_stream.wait(5)
+
+    shell.type_chars("cat ")
+    shell.type_chars("c")
+    shell.appear("hallenge/")
+    shell.type_chars("r")
+    shell.appear("ound1.txt")
+    asciicast_stream.wait(4)
+    shell.press_enter()
+
+    shell.appear(
+        bright(white("Round 1 - Welcome to REALM")) + newline() +
+        newline() +
+        "Welcome to the REALM startup - Realtime Elastic Assets Location Map." + newline() +
+        "Together we are going to revolutionise the way people think about maps." + newline() +
+        "See details below." + newline() +
+        newline() +
+        dim(white("<21 more lines>")) + newline()
+    )
+    asciicast_stream.wait(15)
+
+
+def section_06_structure_code_your_way(asciicast_stream):
+    shell = Shell(asciicast_stream)
+
+    shell.appear(bright(cyan("# Structure the code your way")) + newline())
+    shell.appear(console_arrow())
+    asciicast_stream.wait(5)
+
+    shell.type_chars("> lib")
+    shell.appear("/realm/")
+    shell.type_chars("main.py")
+    shell.press_enter()
+
+    shell.appear(console_arrow())
+    shell.type_chars("> lib")
+    shell.appear("/realm/")
+    shell.type_chars("a_class.py")
+    shell.press_enter()
+
+    shell.appear(console_arrow())
+    shell.type_chars("ls -1")
+    asciicast_stream.wait(4)
+    shell.press_enter()
+    shell.appear(
+        green("main.py") + newline() +
+        "a_class.py" + newline()
+    )
+    shell.appear(newline())
+    asciicast_stream.wait(10)
+
+
+def section_07_use_ide_of_choice(asciicast_stream):
+    shell = Shell(asciicast_stream)
+
+    shell.appear(bright(cyan("# Use the IDE of your choice")) + newline())
+    shell.appear(console_arrow())
+    asciicast_stream.wait(5)
+
+    shell.type_chars("vim ")
+    shell.type_chars("te")
+    shell.appear("st/realm/")
+    shell.type_chars("te")
+    shell.appear("st_main.py")
+    shell.press_enter()
+    asciicast_stream.wait(5)
 
 
 # ~~~~~~~~~~ Putting it together ~~~~~~~~~~``
 
-with open('build/01_hostname.cast', 'w') as f:
-    section_01_hostname(f)
+sections = [
+    ('build/01_hostname.cast', section_01_hostname),
+    ('build/02_clone_project.cast', section_02_clone_project),
+    ('build/03_standard_project_setup.cast', section_03_standard_project_setup),
+    ('build/04_start_challenge.cast', section_04_start_challenge),
+    ('build/05_real_world_challenge.cast', section_05_real_world_challenge),
+    ('build/06_structure_code_your_way.cast', section_06_structure_code_your_way),
+    ('build/07_use_IDE_of_choice.cast', section_07_use_ide_of_choice),
+]
 
-with open('build/02_clone_project.cast', 'w') as f:
-    section_02_clone_project(f)
+
+def create_asciicast_stream(char_stream):
+    return AsciicastStream(width=60, height=21, stream=char_stream, length_of_one_tick_in_seconds=0.1)
+
+
+for filename, func in sections:
+    with open(filename, 'w') as f:
+        func(create_asciicast_stream(f))
 
 with open('build/e2e.cast', 'w') as f:
-    main_stream = AsciicastStream(width=60, height=21, stream=f,
-                                  length_of_one_tick_in_seconds=0.1)
+    main_stream = create_asciicast_stream(f)
+    for filename, func in sections:
+        main_stream.write_from_input_stream(open(filename, 'r'))
 
-    main_stream.write_from_input_stream(open('build/01_hostname.cast', 'r'))
-    main_stream.write_from_input_stream(open('build/02_clone_project.cast', 'r'))
     main_stream.wait(ticks=50)
