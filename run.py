@@ -4,7 +4,8 @@ import os
 
 from asciicast.shell import Shell
 from asciicast.stream import AsciicastStream
-from asciicast.text import newline, bright, cyan, green, blue, console_arrow, yellow, white, dim
+from asciicast.text import newline, bright, cyan, green, blue, console_arrow, yellow, white, dim, magenta
+from asciicast.vim import VimEditor
 
 if not os.path.exists('build'):
     os.makedirs('build')
@@ -188,6 +189,59 @@ def section_07_use_ide_of_choice(asciicast_stream):
     shell.type_chars("te")
     shell.appear("st_main.py")
     shell.press_enter()
+
+    content_lines = [
+        cyan("import") + " io",
+        "",
+        cyan("from") + " approvaltests.approvals " + cyan("import") + " verify",
+        cyan("from") + " asciicast.stream " + cyan("import") + " AsciicastStream",
+        "",
+        "",
+        cyan("def") + " " + yellow("test_merge_two_streams") + "()",
+        "    string_stream1 " + dim(white("=")) + " io.StringIO(",
+        "    " + green("\"\"\"{\"version\": 2, \"width\": 1, \"height\": 2}"),
+        "            " + green("[1, \"o\", \"x\"]\""),
+        "            " + green("[2, \"i\", \"y\"]\"\"\"") + ")",
+        "    ",
+        "    string_stream2 " + dim(white("=")) + " io.StringIO(",
+        "    " + green("\"\"\"{\"version\": 2, \"width\": 2, \"height\": 3}"),
+        "            " + green("[0.1, \"o\", \"a\"]\""),
+        "            " + green("[1.2, \"i\", \"b\"]\"\"\"") + ")",
+        "    ",
+        "    string_stream " + dim(white("=")) + " io.StringIO()",
+        "    asciicast_stream " + dim(white("=")) + " AsciicastStream(" +
+        "width=" + dim(white("=")) + magenta("60")+", " +
+        "height" + dim(white("=")) + magenta("21")+", " +
+        "stream" + dim(white("=")) + "string_stream)",
+        "    ",
+        "    asciicast_stream.write_from_input_stream(string_stream1)",
+        "    asciicast_stream.write_from_input_stream(string_stream2)",
+        "    ",
+        "    verify(string_stream.getvalue())",
+        ""
+    ]
+    vim = VimEditor(asciicast_stream, "\n".join(content_lines))
+
+    vim.display_content()
+    asciicast_stream.wait(10)
+
+    vim.cursor_down(6)
+    vim.content_scroll_down(5)
+    asciicast_stream.wait(10)
+    asciicast_stream.wait(5)
+    vim.cursor_right(7)
+    vim.cursor_right(6)
+    asciicast_stream.wait(10)
+
+    vim.appear_in_footer("-- INSERT --")
+    asciicast_stream.wait(20)
+    vim.delete_at_cursor(num_chars=3)
+    asciicast_stream.wait(20)
+    vim.type_at_cursor("word\n")
+
+    vim.type_in_footer(":wq!")
+    asciicast_stream.wait(20)
+    vim.close()
     asciicast_stream.wait(5)
 
 
