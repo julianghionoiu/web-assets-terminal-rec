@@ -89,9 +89,10 @@ def test_footer_appear_and_type():
 def test_content_delete_and_insert():
     string_stream = io.StringIO()
     asciicast_stream = AsciicastStream(width=60, height=21, stream=string_stream)
-    vim = VimEditor(asciicast_stream, "\u001b[31mred????\u001b[0m word2\n")
+    vim = VimEditor(asciicast_stream, "xyz\n\u001b[31mred????\u001b[0m word2\n"+_generate_lines(20))
 
     vim.display_content()
+    vim.content_scroll_down(1)
     vim.cursor_right(num_cols=3)
     vim.delete_at_cursor(num_chars=20)
     vim.type_at_cursor("word\n")

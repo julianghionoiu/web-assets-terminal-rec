@@ -129,14 +129,14 @@ class VimEditor(object):
         max_chars_to_delete = min(chars_in_row - self._cursor_col, num_chars)
         for _ in range(0, max_chars_to_delete):
             self._delete_char_at_cursor(self._cursor_row, self._cursor_col)
-        self._render_individual_data_line(self._cursor_row)
+        self._render_individual_data_line(self._data_line_row + self._cursor_row)
 
     def type_at_cursor(self, text):
         self._stream.write_section_comment("type_at_cursor(text={})".format(text))
         self._stream.wait(5)
         for _char in text:
             self._insert_char_at_cursor(self._cursor_row, self._cursor_col, _char)
-            self._render_individual_data_line(self._cursor_row)
+            self._render_individual_data_line(self._data_line_row + self._cursor_row)
             self._cursor_col += 1
             self._stream.wait(1)
 
@@ -180,8 +180,8 @@ class VimEditor(object):
         return len(visible_chars)
 
     def _print_cursor_position(self):
-        self._stream.write_internal_comment("cursor_position=(row:{},col:{})".format(
-            self._cursor_row, self._cursor_col))
+        self._stream.write_internal_comment("cursor_position=(row:{},col:{}), data_line_row={}".format(
+            self._cursor_row, self._cursor_col, self._data_line_row))
 
     def _render_new_cursor_location(self, cursor_row, cursor_col):
         self._stream.write_frame(_ansi_set_cursor_position(cursor_row, cursor_col))
