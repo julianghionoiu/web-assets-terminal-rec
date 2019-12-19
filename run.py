@@ -227,20 +227,21 @@ def section_07_use_ide_of_choice(asciicast_stream):
 
     vim.cursor_down(6)
     vim.content_scroll_down(5)
-    asciicast_stream.wait(10)
-    asciicast_stream.wait(5)
+    asciicast_stream.wait(4)
+    vim.cursor_down(4)
     vim.cursor_right(7)
     vim.cursor_right(6)
-    asciicast_stream.wait(10)
+    asciicast_stream.wait(4)
 
     vim.appear_in_footer("-- INSERT --")
-    asciicast_stream.wait(20)
+    asciicast_stream.wait(4)
     vim.delete_at_cursor(num_chars=3)
-    asciicast_stream.wait(20)
-    vim.type_at_cursor("word\n")
+    asciicast_stream.wait(4)
+    vim.type_at_cursor("3.5")
+    asciicast_stream.wait(5)
 
     vim.type_in_footer(":wq!")
-    asciicast_stream.wait(20)
+    asciicast_stream.wait(5)
     vim.close()
     asciicast_stream.wait(5)
 
