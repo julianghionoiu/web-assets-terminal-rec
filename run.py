@@ -314,13 +314,16 @@ for filename, render_func, comment in sections:
     with open(filename, 'w') as f:
         _asciicast_stream = create_asciicast_stream(f)
 
+        # Section title
         _shell = Shell(_asciicast_stream)
         _shell.appear(bright(cyan("# " + comment)) + newline())
         _shell.appear(console_arrow())
-
         _asciicast_stream.wait(20)
+
+        # Section specific actions
         render_func(_asciicast_stream)
 
+        # Allow the message to sink in
         _shell.appear(newline())
         _asciicast_stream.wait(15)
 

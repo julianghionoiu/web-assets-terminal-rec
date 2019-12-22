@@ -11,7 +11,7 @@ class VimEditor(object):
     def __init__(self, asciicast_stream: AsciicastStream, block_of_text: str) -> None:
         self._stream = asciicast_stream
         self._data_lines = block_of_text.split("\n")
-        self._viewport_height = min(asciicast_stream.height - 1, len(self._data_lines))
+        self._viewport_height = min(asciicast_stream.height - 2, len(self._data_lines))
         self._data_line_row = 0
         self._cursor_row = 0
         self._cursor_col = 0
