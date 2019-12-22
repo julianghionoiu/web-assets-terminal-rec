@@ -2,6 +2,12 @@ def console_arrow() -> str:
     return "\u001b[36m➜ \u001b[m"
 
 
+def thumbs_up() -> str:
+    # Find code here: https://unicode.org/emoji/charts/full-emoji-list.html#1f44d
+    # Get Java reference here: http://www.fileformat.info/info/unicode/char/1f44d/index.htm
+    return "\uD83D\uDC4D"
+
+
 def newline() -> str:
     return "\r\n"
 

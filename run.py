@@ -4,7 +4,7 @@ import os
 
 from asciicast.shell import Shell
 from asciicast.stream import AsciicastStream
-from asciicast.text import newline, bright, cyan, green, blue, console_arrow, yellow, white, dim, magenta
+from asciicast.text import newline, bright, cyan, green, blue, console_arrow, yellow, white, dim, magenta, thumbs_up
 from asciicast.vim import VimEditor
 
 if not os.path.exists('build'):
@@ -14,22 +14,13 @@ if not os.path.exists('build'):
 def section_01_hostname(asciicast_stream):
     shell = Shell(asciicast_stream)
 
-    shell.appear(bright(cyan("# Use own laptop and tools")) + newline())
-    shell.appear(console_arrow())
-    asciicast_stream.wait(5)
-
     shell.type_chars("hostname")
     shell.press_enter()
     shell.appear("candidate-laptop.local" + newline())
-    shell.appear(newline())
 
 
 def section_02_clone_project(asciicast_stream):
     shell = Shell(asciicast_stream)
-
-    shell.appear(bright(cyan("# Clone a starting project - pick language")) + newline())
-    shell.appear(console_arrow())
-    asciicast_stream.wait(5)
 
     shell.type_chars("wget https://get")
     shell.appear(".accelerate.io/")
@@ -52,38 +43,26 @@ def section_02_clone_project(asciicast_stream):
     shell.appear("Done" + newline())
     shell.appear(console_arrow())
     shell.press_enter()
-    shell.appear(newline())
-    asciicast_stream.wait(10)
 
 
-def section_03_standard_project_setup(asciicast_stream):
+def section_03_standard_project(asciicast_stream):
     shell = Shell(asciicast_stream)
-
-    shell.appear(bright(cyan("# Standard project for the language of choice")) + newline())
-    shell.appear(console_arrow())
-    asciicast_stream.wait(5)
 
     shell.type_chars("ls -1")
     asciicast_stream.wait(4)
     shell.press_enter()
     shell.appear(
         "README.md" + newline() +
-        bright(cyan("config")) + newline() +
-        bright(cyan("lib")) + newline() +
+        bright(blue("config")) + newline() +
+        bright(blue("lib")) + newline() +
         "requirements.txt" + newline() +
-        bright(cyan("test")) + newline() +
-        bright(cyan("venv")) + newline()
+        bright(blue("test")) + newline() +
+        bright(blue("venv")) + newline()
     )
-    shell.appear(newline())
-    asciicast_stream.wait(10)
 
 
 def section_04_start_challenge(asciicast_stream):
     shell = Shell(asciicast_stream)
-
-    shell.appear(bright(cyan("# Start challenge from CLI or IDE")) + newline())
-    shell.appear(console_arrow())
-    asciicast_stream.wait(5)
 
     _send_command_show_status(shell, ChallengeStatus.NOT_STARTED)
 
@@ -97,17 +76,10 @@ def section_04_start_challenge(asciicast_stream):
     shell.appear(green("CHALLENGE STARTED") + newline())
     shell.appear("Round 1 description saved to: challenge/round1.txt")
     shell.appear(newline())
-    shell.appear(newline())
-    shell.appear(console_arrow())
-    asciicast_stream.wait(7)
 
 
-def section_05_real_world_challenge(asciicast_stream):
+def section_05_real_world(asciicast_stream):
     shell = Shell(asciicast_stream)
-
-    shell.appear(bright(cyan("# Solve a real-world, scenario based challenge")) + newline())
-    shell.appear(console_arrow())
-    asciicast_stream.wait(5)
 
     shell.type_chars("cat ")
     shell.type_chars("c")
@@ -126,15 +98,11 @@ def section_05_real_world_challenge(asciicast_stream):
         newline() +
         dim(white("<21 more lines>")) + newline()
     )
-    asciicast_stream.wait(15)
+    asciicast_stream.wait(10)
 
 
-def section_06_structure_code_your_way(asciicast_stream):
+def section_06_structure_code(asciicast_stream):
     shell = Shell(asciicast_stream)
-
-    shell.appear(bright(cyan("# Structure the code your way")) + newline())
-    shell.appear(console_arrow())
-    asciicast_stream.wait(5)
 
     shell.type_chars("> lib")
     shell.appear("/realm/")
@@ -155,16 +123,10 @@ def section_06_structure_code_your_way(asciicast_stream):
         green("main.py") + newline() +
         "a_class.py" + newline()
     )
-    shell.appear(newline())
-    asciicast_stream.wait(10)
 
 
 def section_07_use_ide_of_choice(asciicast_stream):
     shell = Shell(asciicast_stream)
-
-    shell.appear(bright(cyan("# Use the IDE of your choice")) + newline())
-    shell.appear(console_arrow())
-    asciicast_stream.wait(5)
 
     shell.type_chars("vim ")
     shell.type_chars("te")
@@ -226,15 +188,10 @@ def section_07_use_ide_of_choice(asciicast_stream):
     vim.type_in_footer(":wq!")
     asciicast_stream.wait(5)
     vim.close()
-    asciicast_stream.wait(5)
 
 
 def section_08_your_tests_your_way(asciicast_stream):
     shell = Shell(asciicast_stream)
-
-    shell.appear(bright(cyan("# Your tests - your way")) + newline())
-    shell.appear(console_arrow())
-    asciicast_stream.wait(5)
 
     shell.type_chars("py.test")
     shell.press_enter()
@@ -247,15 +204,9 @@ def section_08_your_tests_your_way(asciicast_stream):
     shell.appear(newline())
     shell.appear(green("=== ") + bright(green("13 passed")) + green(" in 0.20s ===") + newline())
 
-    asciicast_stream.wait(10)
 
-
-def section_09_deploy_to_production(asciicast_stream):
+def section_09_deploy_to_prod(asciicast_stream):
     shell = Shell(asciicast_stream)
-
-    shell.appear(bright(cyan("# Deploy to Prod = run remote tests")) + newline())
-    shell.appear(console_arrow())
-    asciicast_stream.wait(5)
 
     _send_command_show_status(shell, ChallengeStatus.ROUND_1_STARTED)
 
@@ -279,25 +230,16 @@ def section_09_deploy_to_production(asciicast_stream):
     shell.appear("ROUND 1 result is: " + green("PASSED") + newline())
     shell.appear(yellow("Get ready for the next round!" + newline()))
 
-    shell.appear(console_arrow())
-    asciicast_stream.wait(7)
-
 
 def section_10_incremental_rounds(asciicast_stream):
     shell = Shell(asciicast_stream)
-
-    shell.appear(bright(cyan("# Each rounds adds a new requirement")) + newline())
-    shell.appear(bright(cyan("# Solve all rounds to complete the challenge")) + newline())
-    shell.appear(console_arrow())
-    asciicast_stream.wait(15)
 
     _send_command_show_status(shell, ChallengeStatus.COMPLETED)
 
     shell.appear(newline())
     shell.appear(green("Challenge completed in ") + bright(green("1h 40min")) + newline())
-    shell.appear(newline())
-
-    asciicast_stream.wait(20)
+    asciicast_stream.wait(10)
+    shell.appear(thumbs_up() + newline())
 
 
 # ~~~~~~~~~~ Common stuff
@@ -351,16 +293,16 @@ def _send_command_show_status(shell: Shell, challenge_status: str):
 # ~~~~~~~~~~ Putting it together ~~~~~~~~~~``
 
 sections = [
-    ('build/01_hostname.cast', section_01_hostname),
-    ('build/02_clone_project.cast', section_02_clone_project),
-    ('build/03_standard_project_setup.cast', section_03_standard_project_setup),
-    ('build/04_start_challenge.cast', section_04_start_challenge),
-    ('build/05_real_world_challenge.cast', section_05_real_world_challenge),
-    ('build/06_structure_code_your_way.cast', section_06_structure_code_your_way),
-    ('build/07_use_IDE_of_choice.cast', section_07_use_ide_of_choice),
-    ('build/08_your_tests_your_way.cast', section_08_your_tests_your_way),
-    ('build/09_deploy_to_production.cast', section_09_deploy_to_production),
-    ('build/10_incremental_rounds.cast', section_10_incremental_rounds),
+    ('build/01_hostname.cast', section_01_hostname, "Use own laptop and tools"),
+    ('build/02_clone_project.cast', section_02_clone_project, "Clone a starting project - pick language"),
+    ('build/03_standard_project.cast', section_03_standard_project, "Standard project for the language of choice"),
+    ('build/04_start_challenge.cast', section_04_start_challenge, "Start challenge from CLI or IDE"),
+    ('build/05_real_world.cast', section_05_real_world, "Solve a real-world, scenario based challenge"),
+    ('build/06_structure_code.cast', section_06_structure_code, "Structure the code your way"),
+    ('build/07_use_IDE_of_choice.cast', section_07_use_ide_of_choice, "Use the IDE of your choice"),
+    ('build/08_your_tests_your_way.cast', section_08_your_tests_your_way, "Your tests - your way"),
+    ('build/09_deploy_to_prod.cast', section_09_deploy_to_prod, "Deploy to Prod = run remote tests"),
+    ('build/10_incremental_rounds.cast', section_10_incremental_rounds, "Solve all rounds to complete the challenge"),
 ]
 
 
@@ -368,13 +310,23 @@ def create_asciicast_stream(char_stream):
     return AsciicastStream(width=60, height=21, stream=char_stream, length_of_one_tick_in_seconds=0.1)
 
 
-for filename, func in sections:
+for filename, render_func, comment in sections:
     with open(filename, 'w') as f:
-        func(create_asciicast_stream(f))
+        _asciicast_stream = create_asciicast_stream(f)
+
+        _shell = Shell(_asciicast_stream)
+        _shell.appear(bright(cyan("# " + comment)) + newline())
+        _shell.appear(console_arrow())
+
+        _asciicast_stream.wait(20)
+        render_func(_asciicast_stream)
+
+        _shell.appear(newline())
+        _asciicast_stream.wait(15)
 
 with open('build/e2e.cast', 'w') as f:
     main_stream = create_asciicast_stream(f)
-    for filename, func in sections:
+    for filename, _, _ in sections:
         main_stream.write_from_input_stream(open(filename, 'r'))
 
     main_stream.wait(ticks=50)
