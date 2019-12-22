@@ -85,25 +85,8 @@ def section_04_start_challenge(asciicast_stream):
     shell.appear(console_arrow())
     asciicast_stream.wait(5)
 
-    shell.type_chars("py")
-    shell.appear("thon")
-    shell.type_chars(" lib/se")
-    shell.appear("nd_command_to_server.py")
-    shell.press_enter()
+    _send_command_show_status(shell, ChallengeStatus.NOT_STARTED)
 
-    shell.appear("Connecting to accelerate.io" + newline())
-    shell.appear(newline())
-    shell.appear("Your progress (1/2):" + newline())
-    shell.appear(
-        " " + green("✓") + " WARMUP (3 rounds) - " + green("completed in 5 min") + newline() +
-        " " + bright(blue(">")) + " REALM  (5 rounds) - official" + newline() +
-        "             ROUND 1 - not started" + newline() +
-        "             ROUND 2 - not started" + newline() +
-        "             ROUND 3 - not started" + newline() +
-        "             ROUND 4 - not started" + newline() +
-        "             ROUND 5 - not started" + newline()
-    )
-    shell.appear("-------------------" + newline())
     shell.appear(yellow("Type \"start\" to start challenge") + newline())
     shell.appear(">>> ")
     asciicast_stream.wait(10)
@@ -210,8 +193,8 @@ def section_07_use_ide_of_choice(asciicast_stream):
         "    ",
         "    string_stream " + dim(white("=")) + " io.StringIO()",
         "    asciicast_stream " + dim(white("=")) + " AsciicastStream(" +
-        "width=" + dim(white("=")) + magenta("60")+", " +
-        "height" + dim(white("=")) + magenta("21")+", " +
+        "width=" + dim(white("=")) + magenta("60") + ", " +
+        "height" + dim(white("=")) + magenta("21") + ", " +
         "stream" + dim(white("=")) + "string_stream)",
         "    ",
         "    asciicast_stream.write_from_input_stream(string_stream1)",
@@ -246,6 +229,125 @@ def section_07_use_ide_of_choice(asciicast_stream):
     asciicast_stream.wait(5)
 
 
+def section_08_your_tests_your_way(asciicast_stream):
+    shell = Shell(asciicast_stream)
+
+    shell.appear(bright(cyan("# Your tests - your way")) + newline())
+    shell.appear(console_arrow())
+    asciicast_stream.wait(5)
+
+    shell.type_chars("py.test")
+    shell.press_enter()
+
+    shell.appear(bright(white("=== test session starts ===")) + newline())
+    shell.appear(newline())
+    shell.appear(green("[  7%]  ") + "tests/acceptance/test_e2e.py" + green(" .") + newline())
+    shell.appear(green("[ 38%]  ") + "tests/unit/test_main.py" + green(" ....") + newline())
+    shell.appear(green("[100%]  ") + "tests/unit/test_class.py" + green(" ........") + newline())
+    shell.appear(newline())
+    shell.appear(green("=== ") + bright(green("13 passed")) + green(" in 0.20s ===") + newline())
+
+    asciicast_stream.wait(10)
+
+
+def section_09_deploy_to_production(asciicast_stream):
+    shell = Shell(asciicast_stream)
+
+    shell.appear(bright(cyan("# Deploy to Prod = run remote tests")) + newline())
+    shell.appear(console_arrow())
+    asciicast_stream.wait(5)
+
+    _send_command_show_status(shell, ChallengeStatus.ROUND_1_STARTED)
+
+    shell.appear(yellow("Type \"deploy\" to deploy to production") + newline())
+    shell.appear(">>> ")
+    asciicast_stream.wait(10)
+    shell.type_chars("deploy")
+    shell.press_enter()
+
+    shell.appear(newline())
+    shell.appear("Selected action is: deploy" + newline())
+    shell.appear("Waiting for requests" + newline())
+    shell.appear(newline())
+    asciicast_stream.wait(5)
+    shell.appear("id = REALM_R1_001, req = realm([]), resp = []" + newline())
+    shell.appear("id = REALM_R1_002, req = realm([1, 1]), resp = [0, 0]" + newline())
+    shell.appear("id = REALM_R1_003, req = realm([1, 2, 3]), resp = [0, 2, 0]" + newline())
+    shell.appear(newline())
+    asciicast_stream.wait(3)
+
+    shell.appear("ROUND 1 result is: " + green("PASSED") + newline())
+    shell.appear(yellow("Get ready for the next round!" + newline()))
+
+    shell.appear(console_arrow())
+    asciicast_stream.wait(7)
+
+
+def section_10_incremental_rounds(asciicast_stream):
+    shell = Shell(asciicast_stream)
+
+    shell.appear(bright(cyan("# Each rounds adds a new requirement")) + newline())
+    shell.appear(bright(cyan("# Solve all rounds to complete the challenge")) + newline())
+    shell.appear(console_arrow())
+    asciicast_stream.wait(15)
+
+    _send_command_show_status(shell, ChallengeStatus.COMPLETED)
+
+    shell.appear(newline())
+    shell.appear(green("Challenge completed in ") + bright(green("1h 40min")) + newline())
+    shell.appear(newline())
+
+    asciicast_stream.wait(20)
+
+
+# ~~~~~~~~~~ Common stuff
+
+class ChallengeStatus:
+    IDENT = "             "
+
+    NOT_STARTED = newline().join([
+        IDENT + "ROUND 1 - not started",
+        IDENT + "ROUND 2 - not started",
+        IDENT + "ROUND 3 - not started",
+        IDENT + "ROUND 4 - not started",
+        IDENT + "ROUND 5 - not started",
+    ])
+
+    ROUND_1_STARTED = newline().join([
+        IDENT + "ROUND 1 - " + bright(blue("running for 12 min")),
+        IDENT + "ROUND 2 - not started",
+        IDENT + "ROUND 3 - not started",
+        IDENT + "ROUND 4 - not started",
+        IDENT + "ROUND 5 - not started",
+    ])
+
+    COMPLETED = newline().join([
+        IDENT + "ROUND 1 - " + green("completed in 20 min"),
+        IDENT + "ROUND 2 - " + green("completed in 45 min"),
+        IDENT + "ROUND 3 - " + green("completed in 13 min"),
+        IDENT + "ROUND 4 - " + green("completed in 41 min"),
+        IDENT + "ROUND 5 - " + green("completed in 32 min"),
+    ])
+
+
+def _send_command_show_status(shell: Shell, challenge_status: str):
+    shell.type_chars("py")
+    shell.appear("thon")
+    shell.type_chars(" lib/se")
+    shell.appear("nd_command_to_server.py")
+    shell.press_enter()
+    shell.appear("Connecting to accelerate.io" + newline())
+    shell.appear(newline())
+    shell.appear("Your progress (1/2):" + newline())
+
+    shell.appear(
+        " " + green("✓") + " WARMUP (3 rounds) - " + green("completed in 5 min") + newline() +
+        " " + bright(blue(">")) + " REALM  (5 rounds) - official" + newline() +
+        challenge_status + newline()
+    )
+    shell.appear("-------------------" + newline())
+
+
 # ~~~~~~~~~~ Putting it together ~~~~~~~~~~``
 
 sections = [
@@ -256,6 +358,9 @@ sections = [
     ('build/05_real_world_challenge.cast', section_05_real_world_challenge),
     ('build/06_structure_code_your_way.cast', section_06_structure_code_your_way),
     ('build/07_use_IDE_of_choice.cast', section_07_use_ide_of_choice),
+    ('build/08_your_tests_your_way.cast', section_08_your_tests_your_way),
+    ('build/09_deploy_to_production.cast', section_09_deploy_to_production),
+    ('build/10_incremental_rounds.cast', section_10_incremental_rounds),
 ]
 
 
